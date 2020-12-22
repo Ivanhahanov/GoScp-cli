@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 )
@@ -87,9 +88,10 @@ func Auth(username string, password string) (token string, err error) {
 	}
 	config := Config.YamlConfig{
 		Username: username,
-		Token: token,
+		Token:    token,
+		RootDir:  os.Getenv("HOME"),
 	}
-	if err := config.UpdateConfig(); err != nil{
+	if err := config.UpdateConfig(); err != nil {
 		return "", err
 	}
 	return token, nil

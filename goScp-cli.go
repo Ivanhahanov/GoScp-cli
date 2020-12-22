@@ -3,6 +3,7 @@ package main
 import (
 	"SecureCodePlatform-cli/Config"
 	"SecureCodePlatform-cli/Login"
+	"SecureCodePlatform-cli/Pull"
 	"SecureCodePlatform-cli/Score"
 	"fmt"
 	"github.com/urfave/cli"
@@ -54,24 +55,29 @@ func main() {
 				if err != nil {
 					return err
 				}
-				configPath := fmt.Sprintf("%s/%s", rootDirectory, configName)
-				fmt.Println("Creating default conf file in ", configPath)
-
+				token, err := Login.ValidateToken()
+				if err != nil {
+					return err
+				}
 				config := Config.YamlConfig{}
 				config.Username = username
 				config.RootDir = rootDirectory
-				if err = config.CreateConfig(); err != nil{
+				config.Token = token
+
+				configPath := fmt.Sprintf("%s/%s", rootDirectory, configName)
+				fmt.Println("Creating default conf file in ", configPath)
+
+				if err = config.CreateConfig(); err != nil {
 					return err
 				}
-				if err = config.UpdateConfig(); err != nil{
+				if err = config.UpdateConfig(); err != nil {
 					return err
 				}
 				return nil
 			},
 		},
 		{
-			Name:
-			"login",
+			Name:    "login",
 			Aliases: []string{"l"},
 			Usage:   "Login to your account",
 			Flags: []cli.Flag{
@@ -106,8 +112,7 @@ func main() {
 			},
 		},
 		{
-			Name:
-			"pull",
+			Name:    "pull",
 			Aliases: []string{"p"},
 			Usage:   "complete a task on the list",
 			Flags: []cli.Flag{
@@ -118,16 +123,19 @@ func main() {
 				},
 			},
 			Action: func(context *cli.Context) error {
-				_ , err := Login.ValidateToken()
-				if err != nil{
+				_, err := Login.ValidateToken()
+				if err != nil {
+					return err
+				}
+				_, err = Pull.CreateChallengeDir()
+				if err != nil {
 					return err
 				}
 				return nil
 			},
 		},
 		{
-			Name:
-			"upload",
+			Name:    "upload",
 			Aliases: []string{"u"},
 			Usage:   "options for task templates",
 			Flags: []cli.Flag{
@@ -144,8 +152,7 @@ func main() {
 			},
 		},
 		{
-			Name:
-			"score",
+			Name:    "score",
 			Aliases: []string{"s"},
 			Usage:   "options for task templates",
 			Flags: []cli.Flag{
@@ -162,10 +169,10 @@ func main() {
 			},
 			Action: func(context *cli.Context) error {
 				token, err := Login.ValidateToken()
-				if err != nil{
+				if err != nil {
 					return err
 				}
-				if err = Score.PrintScoreboard(token); err != nil{
+				if err = Score.PrintScoreboard(token); err != nil {
 					return err
 				}
 				return nil
