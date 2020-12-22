@@ -18,7 +18,7 @@ func main() {
 		Version:  "v0.0.1",
 		Compiled: time.Now(),
 		Authors: []*cli.Author{
-			&cli.Author{
+			{
 				Name:  "Hahanov Ivan",
 				Email: "hahanov.i@explabs.ru",
 			},
