@@ -154,18 +154,6 @@ func main() {
 			Name:    "score",
 			Aliases: []string{"s"},
 			Usage:   "options for task templates",
-			Flags: []cli.Flag{
-				&cli.StringFlag{
-					Name:    "",
-					Aliases: []string{"t"},
-					Usage:   "choose task `id` for upload",
-				},
-				&cli.StringFlag{
-					Name:    "file",
-					Aliases: []string{"f"},
-					Usage:   "Choose `FILE` to upload",
-				},
-			},
 			Action: func(context *cli.Context) error {
 				token, err := Login.ValidateToken()
 				if err != nil {
