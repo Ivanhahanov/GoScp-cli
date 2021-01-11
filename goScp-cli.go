@@ -127,8 +127,7 @@ func main() {
 				if err != nil {
 					return err
 				}
-				_, err = Pull.CreateChallengeDir()
-				if err != nil {
+				if err := Pull.GetChallenge("5fb3e232a882c02d93d0d337"); err != nil {
 					return err
 				}
 				return nil

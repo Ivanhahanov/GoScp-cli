@@ -6,30 +6,31 @@ import (
 	"os"
 	"path/filepath"
 )
+
 var configPath = os.Getenv("HOME") + "/.scp.yaml"
 
 type YamlConfig struct {
 	Username string `yaml:"username"`
-	Token string `yaml:"token"`
-	RootDir string `yaml:"rootDir"`
+	Token    string `yaml:"token"`
+	RootDir  string `yaml:"rootDir"`
 }
 
-func (c *YamlConfig)UpdateConfig() error{
+func (c *YamlConfig) UpdateConfig() error {
 	filename, _ := filepath.Abs(configPath)
 	data, err := yaml.Marshal(&c)
-	if err != nil{
+	if err != nil {
 		return err
 	}
-	if err = ioutil.WriteFile(filename, data, 0644); err != nil{
+	if err = ioutil.WriteFile(filename, data, 0644); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *YamlConfig)CreateConfig() error{
+func (c *YamlConfig) CreateConfig() error {
 	filename, _ := filepath.Abs(configPath)
 	f, err := os.Create(filename)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	defer f.Close()
@@ -38,42 +39,38 @@ func (c *YamlConfig)CreateConfig() error{
 
 func UpdateToken(token string) error {
 	var c YamlConfig
-
-	filename, _ := filepath.Abs(configPath)
-	file, err := ioutil.ReadFile(filename)
-	if err != nil{
+	file, err := ioutil.ReadFile(configPath)
+	if err != nil {
 		return err
 	}
-	if err = yaml.Unmarshal(file, &c); err != nil{
+	if err = yaml.Unmarshal(file, &c); err != nil {
 		return err
 	}
 	c.Token = token
-	if err = c.UpdateConfig(); err != nil{
+	if err = c.UpdateConfig(); err != nil {
 		return err
 	}
 	return nil
 }
 
-func LoadToken() (token string, err error){
+func LoadToken() (token string, err error) {
 	var c YamlConfig
-	filename, _ := filepath.Abs(configPath)
-	file, err := ioutil.ReadFile(filename)
-	if err != nil{
+	file, err := ioutil.ReadFile(configPath)
+	if err != nil {
 		return "", err
 	}
-	if err = yaml.Unmarshal(file, &c); err != nil{
+	if err = yaml.Unmarshal(file, &c); err != nil {
 		return "", err
 	}
 	return c.Token, err
 }
 
-func LoadConfig() (c YamlConfig, err error){
-	filename, _ := filepath.Abs(configPath)
-	file, err := ioutil.ReadFile(filename)
-	if err != nil{
+func LoadConfig() (c YamlConfig, err error) {
+	file, err := ioutil.ReadFile(configPath)
+	if err != nil {
 		return c, err
 	}
-	if err = yaml.Unmarshal(file, &c); err != nil{
+	if err = yaml.Unmarshal(file, &c); err != nil {
 		return c, err
 	}
 	return c, err
